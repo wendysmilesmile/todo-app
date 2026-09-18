@@ -1,0 +1,34 @@
+<section class="todo-list-container">
+  <h1>Todo List</h1>
+
+  <div class="input-row">
+    <input
+      type="text"
+      placeholder="Enter todo title..."
+      [(ngModel)]="newTitle"
+      (keyup.enter)="addTodo()"
+    />
+    <button type="button" (click)="addTodo()">Add</button>
+  </div>
+
+  @if (loading()) {
+    <p class="tips">Loading...</p>
+  }
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (!loading() && visibleTodos().length === 0) {
+    <p class="tips">No todo items yet.</p>
+  }
+
+  <ul>
+    @for (item of visibleTodos(); track item.id) {
+      <li>
+        <span>{{ item.title }}</span>
+        <button type="button" class="delete" (click)="softDelete(item.id)">Delete</button>
+      </li>
+    }
+  </ul>
+</section>
