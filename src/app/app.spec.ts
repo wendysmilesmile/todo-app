@@ -1,10 +1,22 @@
 import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 import { App } from './app';
+import { TodoApiService } from './services/todo-api.service';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [
+        {
+          provide: TodoApiService,
+          useValue: {
+            getTodoList: () => of([]),
+            addTodo: () => of(null),
+            deleteTodo: () => of(false)
+          }
+        }
+      ]
     }).compileComponents();
   });
 
