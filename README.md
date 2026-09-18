@@ -1,59 +1,101 @@
-# TodoApp
+# Todo App (Angular)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.24.
+A simple Todo application built with Angular standalone components.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- List todo items
+- Add todo items
+- Soft delete todo items
+- Hide items with `isDeleted: true` in UI
+- Backend API abstraction through `TodoApiService` and `BackendApiService`
+- Mock backend interceptor available for local development/testing
+- ESLint configuration for TypeScript + Angular templates
+- Unit tests for core todo logic
 
-```bash
-ng serve
-```
+## Tech Stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Angular 21
+- RxJS
+- Vitest (via Angular test runner)
+- ESLint + angular-eslint
 
-## Code scaffolding
+## Project Structure
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- `src/app/components/todo-list/` — Todo list UI and behavior
+- `src/app/services/todo-api.service.ts` — Todo domain service (delegates calls)
+- `src/app/services/backend-api.service.ts` — Backend call implementation + fallback behavior
+- `src/app/services/mock-backend.interceptor.ts` — In-memory mock API for todo endpoints
+- `src/app/models/todo-item.model.ts` — Todo item model
+- `src/app/app.config.ts` — App providers and API base URL configuration
 
-```bash
-ng generate component component-name
-```
+## Getting Started
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Install dependencies:
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Run development server:
 
 ```bash
-ng e2e
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Open:
 
-## Additional Resources
+- `http://localhost:4200/`
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Scripts
+
+- `npm start` — Start dev server
+- `npm run build` — Build the project
+- `npm run test` — Run unit tests
+- `npm run lint` — Run ESLint
+- `npm run lint:fix` — Auto-fix lint issues
+
+## Backend API
+
+Configured base URL is provided by `TODO_API_BASE_URL`.
+
+Expected endpoints:
+
+- `GET /api/todo/list`
+- `POST /api/todo/add` with body `{ "title": "..." }`
+- `POST /api/todo/delete` with body `{ "id": 1 }`
+
+## Mock Backend
+
+The project includes a mock interceptor that supports:
+
+- `GET /api/todo/list`
+- `POST /api/todo/add`
+- `POST /api/todo/delete` (soft delete)
+
+Switching between real backend and mock backend is controlled in `src/app/app.config.ts` by HTTP client provider setup.
+
+## Testing
+
+Run tests:
+
+```bash
+npm run ng -- test --watch=false
+```
+
+Current test coverage includes:
+
+- Backend API service behavior with mock backend
+- Todo list core component behavior (filter/add/delete error handling)
+
+## Linting
+
+Run lint checks:
+
+```bash
+npm run lint
+```
+
+Configuration file:
+
+- `eslint.config.js`
