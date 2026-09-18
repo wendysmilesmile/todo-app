@@ -24,8 +24,24 @@ export class BackendApiService {
             Accept: 'application/json'
           })
         })
-        .pipe(catchError(() => of([])));
-    } catch {
+        .pipe(
+          catchError((error: unknown) => {
+            console.error('[BackendApiService.getTodoList] request failed', {
+              input: {
+                url: `${this.baseUrl}/api/todo/list`
+              },
+              error
+            });
+            return of([]);
+          })
+        );
+    } catch (error) {
+      console.error('[BackendApiService.getTodoList] unexpected exception', {
+        input: {
+          url: `${this.baseUrl}/api/todo/list`
+        },
+        error
+      });
       return of([]);
     }
   }
@@ -38,8 +54,26 @@ export class BackendApiService {
     try {
       return this.http
         .post<TodoItem>(`${this.baseUrl}/api/todo/add`, { title })
-        .pipe(catchError(() => of(null)));
-    } catch {
+        .pipe(
+          catchError((error: unknown) => {
+            console.error('[BackendApiService.addTodo] request failed', {
+              input: {
+                url: `${this.baseUrl}/api/todo/add`,
+                title
+              },
+              error
+            });
+            return of(null);
+          })
+        );
+    } catch (error) {
+      console.error('[BackendApiService.addTodo] unexpected exception', {
+        input: {
+          url: `${this.baseUrl}/api/todo/add`,
+          title
+        },
+        error
+      });
       return of(null);
     }
   }
@@ -54,9 +88,25 @@ export class BackendApiService {
         .post(`${this.baseUrl}/api/todo/delete`, { id })
         .pipe(
           map(() => true),
-          catchError(() => of(false))
+          catchError((error: unknown) => {
+            console.error('[BackendApiService.deleteTodo] request failed', {
+              input: {
+                url: `${this.baseUrl}/api/todo/delete`,
+                id
+              },
+              error
+            });
+            return of(false);
+          })
         );
-    } catch {
+    } catch (error) {
+      console.error('[BackendApiService.deleteTodo] unexpected exception', {
+        input: {
+          url: `${this.baseUrl}/api/todo/delete`,
+          id
+        },
+        error
+      });
       return of(false);
     }
   }
