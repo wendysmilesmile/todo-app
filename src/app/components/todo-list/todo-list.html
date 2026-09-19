@@ -4,13 +4,15 @@
   </mat-card-header>
 
   <mat-card-content>
-    <div style="display: flex; gap: 0.5rem; align-items: flex-start; margin-bottom: 1rem;">
+    <div style="display: flex; gap: 0.5rem; align-items: stretch; margin-bottom: 1rem;">
       <mat-form-field appearance="outline" style="flex: 1;">
         <mat-label>New todo</mat-label>
         <input matInput placeholder="Enter todo title..." [(ngModel)]="newTitle" (keyup.enter)="addTodo()" />
       </mat-form-field>
 
-      <button mat-flat-button color="primary" type="button" (click)="addTodo()">Add</button>
+      <button mat-flat-button color="primary" type="button" style="height: 56px;" (click)="addTodo()">
+        Add
+      </button>
     </div>
 
     @if (loading()) {
@@ -32,14 +34,33 @@
     <div style="display: grid; gap: 0.75rem; margin-top: 0.75rem;">
       @for (item of visibleTodos(); track item.id) {
         <mat-card appearance="outlined">
-          <mat-card-content
-            style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.75rem 1rem;"
-          >
-            <span>{{ item.title }}</span>
-            <button mat-stroked-button color="warn" type="button" (click)="softDelete(item.id)">
-              Delete
-            </button>
-          </mat-card-content>
+          @if (editingId() === item.id) {
+            <mat-card-content
+              style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 1rem; flex-wrap: wrap;"
+            >
+              <mat-form-field appearance="outline" style="flex: 1; min-width: 220px;">
+                <mat-label>Edit title</mat-label>
+                <input matInput [(ngModel)]="editTitle" (keyup.enter)="saveEdit(item.id)" />
+              </mat-form-field>
+
+              <div style="display: flex; gap: 0.5rem;">
+                <button mat-flat-button color="primary" type="button" (click)="saveEdit(item.id)">Save</button>
+                <button mat-stroked-button type="button" (click)="cancelEdit()">Cancel</button>
+              </div>
+            </mat-card-content>
+          } @else {
+            <mat-card-content
+              style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.75rem 1rem;"
+            >
+              <span>{{ item.title }}</span>
+              <div style="display: flex; gap: 0.5rem;">
+                <button mat-stroked-button color="primary" type="button" (click)="startEdit(item)">Edit</button>
+                <button mat-stroked-button color="warn" type="button" (click)="softDelete(item.id)">
+                  Delete
+                </button>
+              </div>
+            </mat-card-content>
+          }
         </mat-card>
       }
     </div>

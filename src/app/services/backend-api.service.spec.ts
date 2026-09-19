@@ -40,6 +40,12 @@ describe('BackendApiService', () => {
     expect(result).toBeNull();
   });
 
+  it('should update todo title through mock backend', async () => {
+    const updated = await firstValueFrom(service.updateTodoTitle(1, 'Do swimming - updated'));
+
+    expect(updated?.title).toBe('Do swimming - updated');
+  });
+
   it('should soft-delete a todo item through mock backend', async () => {
     const deleteResult = await firstValueFrom(service.deleteTodo(1));
     expect(deleteResult).toBe(true);

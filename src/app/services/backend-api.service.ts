@@ -79,6 +79,40 @@ export class BackendApiService {
   }
 
   /**
+   * Updates an existing todo title by id.
+   * Returns null when the request fails.
+   */
+  updateTodoTitle(id: number, title: string): Observable<TodoItem | null> {
+    try {
+      return this.http
+        .patch<TodoItem>(`${this.baseUrl}/api/todo-item/${id}`, { title })
+        .pipe(
+          catchError((error: unknown) => {
+            console.error('[BackendApiService.updateTodoTitle] request failed', {
+              input: {
+                url: `${this.baseUrl}/api/todo-item/${id}`,
+                id,
+                title
+              },
+              error
+            });
+            return of(null);
+          })
+        );
+    } catch (error) {
+      console.error('[BackendApiService.updateTodoTitle] unexpected exception', {
+        input: {
+          url: `${this.baseUrl}/api/todo-item/${id}`,
+          id,
+          title
+        },
+        error
+      });
+      return of(null);
+    }
+  }
+
+  /**
    * Soft-deletes a todo item by id.
    * Returns false when the request fails.
    */

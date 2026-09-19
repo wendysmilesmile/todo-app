@@ -6,6 +6,7 @@ import { TodoListComponent } from './todo-list';
 describe('TodoListComponent core logic', () => {
   let getTodoListSpy: ReturnType<typeof vi.fn>;
   let addTodoSpy: ReturnType<typeof vi.fn>;
+  let updateTodoTitleSpy: ReturnType<typeof vi.fn>;
   let deleteTodoSpy: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
@@ -16,6 +17,7 @@ describe('TodoListComponent core logic', () => {
       ])
     );
     addTodoSpy = vi.fn().mockReturnValue(of({ id: 3, title: 'New Item', isDeleted: false }));
+    updateTodoTitleSpy = vi.fn().mockReturnValue(of({ id: 1, title: 'Updated', isDeleted: false }));
     deleteTodoSpy = vi.fn().mockReturnValue(of(true));
 
     await TestBed.configureTestingModule({
@@ -26,6 +28,7 @@ describe('TodoListComponent core logic', () => {
           useValue: {
             getTodoList: getTodoListSpy,
             addTodo: addTodoSpy,
+            updateTodoTitle: updateTodoTitleSpy,
             deleteTodo: deleteTodoSpy
           }
         }

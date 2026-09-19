@@ -22,6 +22,13 @@ export class TodoApiService {
   }
 
   /**
+   * Updates a todo title by delegating to BackendApiService.
+   */
+  updateTodoTitle(id: number, title: string): Observable<TodoItem | null> {
+    return this.backendApiService.updateTodoTitle(id, title);
+  }
+
+  /**
    * Deletes (soft-deletes) a todo item by delegating to BackendApiService.
    */
   deleteTodo(id: number): Observable<boolean> {

@@ -48,6 +48,7 @@ function badRequest(message: string): Observable<never> {
  * Handles mock implementations for todo endpoints:
  * - GET /api/todo-items
  * - POST /api/todo-item
+ * - PATCH /api/todo-item/{id}
  * - DELETE /api/todo-item/{id} (soft delete)
  * Returns null when the request is not a mocked endpoint.
  */
@@ -78,6 +79,45 @@ function handleMockRequest(req: HttpRequest<unknown>): Observable<HttpEvent<unkn
     mockTodos = [...mockTodos, created];
 
     return of(new HttpResponse<TodoItem>({ status: 200, body: created })).pipe(
+      delay(MOCK_NETWORK_DELAY_MS)
+    );
+  }
+
+  if (req.method === 'PATCH' && pathname.includes('/api/todo-item/')) {
+    const idText = pathname.substring(pathname.lastIndexOf('/') + 1);
+    const parsedId = Number(idText);
+    const id = Number.isNaN(parsedId) ? undefined : parsedId;
+    const body = req.body as { title?: string } | null;
+    const title = body?.title?.trim();
+
+    if (typeof id !== 'number') {
+      return badRequest('id is required');
+    }
+
+    if (!title) {
+      return badRequest('title is required');
+    }
+
+    const existing = mockTodos.find((item) => item.id === id);
+    if (!existing) {
+      return throwError(
+        () =>
+          new HttpErrorResponse({
+            status: 404,
+            statusText: 'Not Found',
+            error: { message: 'todo item not found' }
+          })
+      );
+    }
+
+    const updated: TodoItem = {
+      ...existing,
+      title
+    };
+
+    mockTodos = mockTodos.map((item) => (item.id === id ? updated : item));
+
+    return of(new HttpResponse<TodoItem>({ status: 200, body: updated })).pipe(
       delay(MOCK_NETWORK_DELAY_MS)
     );
   }

@@ -33,6 +33,8 @@ export class TodoListComponent implements OnInit {
   protected readonly loading = signal(false);
   protected readonly errorMessage = signal('');
   protected newTitle = '';
+  protected readonly editingId = signal<number | null>(null);
+  protected editTitle = '';
 
   constructor(private readonly todoApiService: TodoApiService) {}
 
@@ -92,6 +94,40 @@ export class TodoListComponent implements OnInit {
       },
       error: () => {
         this.errorMessage.set('Failed to delete todo item.');
+      }
+    });
+  }
+
+  protected startEdit(item: TodoItem): void {
+    this.editingId.set(item.id);
+    this.editTitle = item.title;
+  }
+
+  protected cancelEdit(): void {
+    this.editingId.set(null);
+    this.editTitle = '';
+  }
+
+  protected saveEdit(id: number): void {
+    const title = this.editTitle.trim();
+    if (!title) {
+      this.errorMessage.set('Title cannot be empty.');
+      return;
+    }
+
+    this.todoApiService.updateTodoTitle(id, title).subscribe({
+      next: (updatedItem) => {
+        if (!updatedItem) {
+          this.errorMessage.set('Failed to update todo item.');
+          return;
+        }
+
+        this.errorMessage.set('');
+        this.cancelEdit();
+        this.loadTodos();
+      },
+      error: () => {
+        this.errorMessage.set('Failed to update todo item.');
       }
     });
   }
