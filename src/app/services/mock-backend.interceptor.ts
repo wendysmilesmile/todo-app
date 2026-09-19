@@ -46,21 +46,21 @@ function badRequest(message: string): Observable<never> {
 
 /**
  * Handles mock implementations for todo endpoints:
- * - GET /api/todo/list
- * - POST /api/todo/add
- * - POST /api/todo/delete (soft delete)
+ * - GET /api/todo-items
+ * - POST /api/todo-item
+ * - DELETE /api/todo-item/{id} (soft delete)
  * Returns null when the request is not a mocked endpoint.
  */
 function handleMockRequest(req: HttpRequest<unknown>): Observable<HttpEvent<unknown>> | null {
   const pathname = getPathname(req.url);
 
-  if (req.method === 'GET' && pathname.endsWith('/api/todo/list')) {
+  if (req.method === 'GET' && pathname.endsWith('/api/todo-items')) {
     return of(new HttpResponse<TodoItem[]>({ status: 200, body: [...mockTodos] })).pipe(
       delay(MOCK_NETWORK_DELAY_MS)
     );
   }
 
-  if (req.method === 'POST' && pathname.endsWith('/api/todo/add')) {
+  if (req.method === 'POST' && pathname.endsWith('/api/todo-item')) {
     const body = req.body as { title?: string } | null;
     const title = body?.title?.trim();
 
@@ -82,9 +82,10 @@ function handleMockRequest(req: HttpRequest<unknown>): Observable<HttpEvent<unkn
     );
   }
 
-  if (req.method === 'POST' && pathname.endsWith('/api/todo/delete')) {
-    const body = req.body as { id?: number } | null;
-    const id = body?.id;
+  if (req.method === 'DELETE' && pathname.includes('/api/todo-item/')) {
+    const idText = pathname.substring(pathname.lastIndexOf('/') + 1);
+    const parsedId = Number(idText);
+    const id = Number.isNaN(parsedId) ? undefined : parsedId;
 
     if (typeof id !== 'number') {
       return badRequest('id is required');

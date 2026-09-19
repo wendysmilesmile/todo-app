@@ -19,7 +19,7 @@ export class BackendApiService {
   getTodoList(): Observable<TodoItem[]> {
     try {
       return this.http
-        .get<TodoItem[]>(`${this.baseUrl}/api/todo/list`, {
+        .get<TodoItem[]>(`${this.baseUrl}/api/todo-items`, {
           headers: new HttpHeaders({
             Accept: 'application/json'
           })
@@ -28,7 +28,7 @@ export class BackendApiService {
           catchError((error: unknown) => {
             console.error('[BackendApiService.getTodoList] request failed', {
               input: {
-                url: `${this.baseUrl}/api/todo/list`
+                url: `${this.baseUrl}/api/todo-items`
               },
               error
             });
@@ -38,7 +38,7 @@ export class BackendApiService {
     } catch (error) {
       console.error('[BackendApiService.getTodoList] unexpected exception', {
         input: {
-          url: `${this.baseUrl}/api/todo/list`
+          url: `${this.baseUrl}/api/todo-items`
         },
         error
       });
@@ -53,12 +53,12 @@ export class BackendApiService {
   addTodo(title: string): Observable<TodoItem | null> {
     try {
       return this.http
-        .post<TodoItem>(`${this.baseUrl}/api/todo/add`, { title })
+        .post<TodoItem>(`${this.baseUrl}/api/todo-item`, { title })
         .pipe(
           catchError((error: unknown) => {
             console.error('[BackendApiService.addTodo] request failed', {
               input: {
-                url: `${this.baseUrl}/api/todo/add`,
+                url: `${this.baseUrl}/api/todo-item`,
                 title
               },
               error
@@ -69,7 +69,7 @@ export class BackendApiService {
     } catch (error) {
       console.error('[BackendApiService.addTodo] unexpected exception', {
         input: {
-          url: `${this.baseUrl}/api/todo/add`,
+          url: `${this.baseUrl}/api/todo-item`,
           title
         },
         error
@@ -85,13 +85,13 @@ export class BackendApiService {
   deleteTodo(id: number): Observable<boolean> {
     try {
       return this.http
-        .post(`${this.baseUrl}/api/todo/delete`, { id })
+        .delete(`${this.baseUrl}/api/todo-item/${id}`)
         .pipe(
           map(() => true),
           catchError((error: unknown) => {
             console.error('[BackendApiService.deleteTodo] request failed', {
               input: {
-                url: `${this.baseUrl}/api/todo/delete`,
+                url: `${this.baseUrl}/api/todo-item/${id}`,
                 id
               },
               error
@@ -102,7 +102,7 @@ export class BackendApiService {
     } catch (error) {
       console.error('[BackendApiService.deleteTodo] unexpected exception', {
         input: {
-          url: `${this.baseUrl}/api/todo/delete`,
+          url: `${this.baseUrl}/api/todo-item/${id}`,
           id
         },
         error
