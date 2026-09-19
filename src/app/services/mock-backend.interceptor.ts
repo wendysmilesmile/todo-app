@@ -13,9 +13,9 @@ import { TodoItem } from '../models/todo-item.model';
 const MOCK_NETWORK_DELAY_MS = 250;
 
 let mockTodos: TodoItem[] = [
-  { id: 1, title: 'Read Angular docs', isDeleted: false },
-  { id: 2, title: 'Write unit tests', isDeleted: false },
-  { id: 3, title: 'Legacy deleted item', isDeleted: true }
+  { id: 1, title: 'Do swimming', isDeleted: false },
+  { id: 2, title: 'Go hiking', isDeleted: false },
+  { id: 3, title: 'Do cooking', isDeleted: true }
 ];
 
 /**

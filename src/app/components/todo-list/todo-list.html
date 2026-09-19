@@ -1,34 +1,47 @@
-<section class="todo-list-container">
-  <h1>Todo List</h1>
+<mat-card appearance="outlined" style="max-width: 720px; margin: 2rem auto; padding: 1rem;">
+  <mat-card-header>
+    <mat-card-title>Todo List</mat-card-title>
+  </mat-card-header>
 
-  <div class="input-row">
-    <input
-      type="text"
-      placeholder="Enter todo title..."
-      [(ngModel)]="newTitle"
-      (keyup.enter)="addTodo()"
-    />
-    <button type="button" (click)="addTodo()">Add</button>
-  </div>
+  <mat-card-content>
+    <div style="display: flex; gap: 0.5rem; align-items: flex-start; margin-bottom: 1rem;">
+      <mat-form-field appearance="outline" style="flex: 1;">
+        <mat-label>New todo</mat-label>
+        <input matInput placeholder="Enter todo title..." [(ngModel)]="newTitle" (keyup.enter)="addTodo()" />
+      </mat-form-field>
 
-  @if (loading()) {
-    <p class="tips">Loading...</p>
-  }
+      <button mat-flat-button color="primary" type="button" (click)="addTodo()">Add</button>
+    </div>
 
-  @if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
-  }
-
-  @if (!loading() && visibleTodos().length === 0) {
-    <p class="tips">No todo items yet.</p>
-  }
-
-  <ul>
-    @for (item of visibleTodos(); track item.id) {
-      <li>
-        <span>{{ item.title }}</span>
-        <button type="button" class="delete" (click)="softDelete(item.id)">Delete</button>
-      </li>
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     }
-  </ul>
-</section>
+
+    @if (errorMessage()) {
+      <mat-card appearance="outlined" style="margin-top: 0.75rem; border-color: #ef9a9a;">
+        <mat-card-content style="color: #b71c1c;">{{ errorMessage() }}</mat-card-content>
+      </mat-card>
+    }
+
+    @if (!loading() && visibleTodos().length === 0) {
+      <mat-card appearance="outlined" style="margin-top: 0.75rem;">
+        <mat-card-content style="color: #6b7280;">No todo items yet.</mat-card-content>
+      </mat-card>
+    }
+
+    <div style="display: grid; gap: 0.75rem; margin-top: 0.75rem;">
+      @for (item of visibleTodos(); track item.id) {
+        <mat-card appearance="outlined">
+          <mat-card-content
+            style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.75rem 1rem;"
+          >
+            <span>{{ item.title }}</span>
+            <button mat-stroked-button color="warn" type="button" (click)="softDelete(item.id)">
+              Delete
+            </button>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  </mat-card-content>
+</mat-card>
