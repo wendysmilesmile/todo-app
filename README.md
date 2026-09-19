@@ -74,6 +74,36 @@ Expected endpoints:
 - `PATCH /api/todo-item/{id}` with body `{ "title": "..." }`
 - `DELETE /api/todo-item/{id}`
 
+## Run Locally (Two Backend Options)
+
+### Option 1: Real backend service (Docker)
+
+1. Start backend service from: https://github.com/wendysmilesmile/todo-service
+2. Run it with Docker (follow that repository's Docker instructions)
+3. Set frontend `.env`:
+
+```bash
+BACKEND_API_BASE_URL=http://localhost:8080
+```
+
+4. Start frontend:
+
+```bash
+npm start
+```
+
+### Option 2: Mock backend service (local debugging)
+
+If you want to replace real backend API with mock backend API:
+
+1. In [src/app/app.config.ts](src/app/app.config.ts), import `withInterceptors` and `mockBackendInterceptor`
+2. Change `provideHttpClient()` to `provideHttpClient(withInterceptors([mockBackendInterceptor]))`
+3. Start frontend:
+
+```bash
+npm start
+```
+
 ## Mock Backend
 
 The project contains a mock interceptor implementation in [src/app/services/mock-backend.interceptor.ts](src/app/services/mock-backend.interceptor.ts).
