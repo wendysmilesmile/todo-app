@@ -4,64 +4,32 @@
   </mat-card-header>
 
   <mat-card-content>
-    <div style="display: flex; gap: 0.5rem; align-items: stretch; margin-bottom: 1rem;">
-      <mat-form-field appearance="outline" style="flex: 1;">
-        <mat-label>New todo</mat-label>
-        <input matInput placeholder="Enter todo title..." [(ngModel)]="newTitle" (keyup.enter)="addTodo()" />
-      </mat-form-field>
-
-      <button mat-flat-button color="primary" type="button" style="height: 56px;" (click)="addTodo()">
-        Add
-      </button>
-    </div>
+    <app-todo-add-item [title]="newTitle" (titleChange)="newTitle = $event" (add)="addTodo($event)"></app-todo-add-item>
 
     @if (loading()) {
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <app-is-loading></app-is-loading>
     }
 
     @if (errorMessage()) {
-      <mat-card appearance="outlined" style="margin-top: 0.75rem; border-color: #ef9a9a;">
-        <mat-card-content style="color: #b71c1c;">{{ errorMessage() }}</mat-card-content>
-      </mat-card>
+      <app-error-message [message]="errorMessage()"></app-error-message>
     }
 
     @if (!loading() && visibleTodos().length === 0) {
-      <mat-card appearance="outlined" style="margin-top: 0.75rem;">
-        <mat-card-content style="color: #6b7280;">No todo items yet.</mat-card-content>
-      </mat-card>
+      <app-empty-state></app-empty-state>
     }
 
     <div style="display: grid; gap: 0.75rem; margin-top: 0.75rem;">
       @for (item of visibleTodos(); track item.id) {
-        <mat-card appearance="outlined">
-          @if (editingId() === item.id) {
-            <mat-card-content
-              style="display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 1rem; flex-wrap: wrap;"
-            >
-              <mat-form-field appearance="outline" style="flex: 1; min-width: 220px;">
-                <mat-label>Edit title</mat-label>
-                <input matInput [(ngModel)]="editTitle" (keyup.enter)="saveEdit(item.id)" />
-              </mat-form-field>
-
-              <div style="display: flex; gap: 0.5rem;">
-                <button mat-flat-button color="primary" type="button" (click)="saveEdit(item.id)">Save</button>
-                <button mat-stroked-button type="button" (click)="cancelEdit()">Cancel</button>
-              </div>
-            </mat-card-content>
-          } @else {
-            <mat-card-content
-              style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.75rem 1rem;"
-            >
-              <span>{{ item.title }}</span>
-              <div style="display: flex; gap: 0.5rem;">
-                <button mat-stroked-button color="primary" type="button" (click)="startEdit(item)">Edit</button>
-                <button mat-stroked-button color="warn" type="button" (click)="softDelete(item.id)">
-                  Delete
-                </button>
-              </div>
-            </mat-card-content>
-          }
-        </mat-card>
+        <app-todo-item
+          [item]="item"
+          [isEditing]="editingId() === item.id"
+          [editTitle]="editTitle"
+          (startEdit)="startEdit($event)"
+          (editTitleChange)="editTitle = $event"
+          (saveEdit)="saveEdit($event)"
+          (cancelEdit)="cancelEdit()"
+          (deleteItem)="softDelete($event)"
+        ></app-todo-item>
       }
     </div>
   </mat-card-content>

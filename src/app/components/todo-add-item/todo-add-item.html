@@ -1,0 +1,14 @@
+<div style="display: flex; gap: 0.5rem; align-items: stretch; margin-bottom: 1rem;">
+  <mat-form-field appearance="outline" style="flex: 1;">
+    <mat-label>New todo</mat-label>
+    <input
+      matInput
+      placeholder="Enter todo title..."
+      [ngModel]="title"
+      (ngModelChange)="titleChange.emit($event)"
+      (keyup.enter)="onAdd()"
+    />
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" type="button" style="height: 56px;" (click)="onAdd()">Add</button>
+</div>

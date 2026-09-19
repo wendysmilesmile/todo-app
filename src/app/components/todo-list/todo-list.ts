@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TodoItem } from '../../models/todo-item.model';
 import { TodoApiService } from '../../services/todo-api.service';
+import { EmptyStateComponent } from '../empty-state/empty-state';
+import { ErrorMessageComponent } from '../error-message/error-message';
+import { IsLoadingComponent } from '../is-loading/is-loading';
+import { TodoAddItemComponent } from '../todo-add-item/todo-add-item';
+import { TodoItemComponent } from '../todo-item/todo-item';
 
 @Component({
   selector: 'app-todo-list',
   imports: [
     CommonModule,
-    FormsModule,
     MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatProgressBarModule
+    TodoAddItemComponent,
+    IsLoadingComponent,
+    ErrorMessageComponent,
+    EmptyStateComponent,
+    TodoItemComponent
   ],
   templateUrl: './todo-list.html',
   styleUrl: './todo-list.scss'
@@ -58,8 +58,9 @@ export class TodoListComponent implements OnInit {
     });
   }
 
-  protected addTodo(): void {
-    const title = this.newTitle.trim();
+  protected addTodo(titleInput?: string): void {
+    const sourceTitle = titleInput ?? this.newTitle;
+    const title = sourceTitle.trim();
     if (!title) {
       return;
     }
