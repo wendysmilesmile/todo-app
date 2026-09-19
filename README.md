@@ -58,23 +58,32 @@ Open:
 
 ## Backend API
 
-Configured base URL is provided by `TODO_API_BASE_URL`.
+Configured base URL is read from `.env`:
+
+- `BACKEND_API_BASE_URL=http://localhost:8080`
+
+This project supports **two backend modes**:
+
+1. **Real backend mode** (default): call backend service using URL from `.env`
+2. **Mock backend mode**: use in-memory mock API for local debugging
 
 Expected endpoints:
 
-- `GET /api/todo/list`
-- `POST /api/todo/add` with body `{ "title": "..." }`
-- `POST /api/todo/delete` with body `{ "id": 1 }`
+- `GET /api/todo-items`
+- `POST /api/todo-item` with body `{ "title": "..." }`
+- `PATCH /api/todo-item/{id}` with body `{ "title": "..." }`
+- `DELETE /api/todo-item/{id}`
 
 ## Mock Backend
 
-The project includes a mock interceptor that supports:
+The project contains a mock interceptor implementation in [src/app/services/mock-backend.interceptor.ts](src/app/services/mock-backend.interceptor.ts).
 
-- `GET /api/todo/list`
-- `POST /api/todo/add`
-- `POST /api/todo/delete` (soft delete)
+To enable mock backend debugging, update [src/app/app.config.ts](src/app/app.config.ts):
 
-Switching between real backend and mock backend is controlled in `src/app/app.config.ts` by HTTP client provider setup.
+- import `withInterceptors` and `mockBackendInterceptor`
+- change `provideHttpClient()` to `provideHttpClient(withInterceptors([mockBackendInterceptor]))`
+
+To switch back to real backend mode, use `provideHttpClient()` and keep backend URL in `.env`.
 
 ## Testing
 
