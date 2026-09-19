@@ -12,6 +12,7 @@ A simple Todo application built with Angular standalone components.
 - Mock backend interceptor available for local development/testing
 - ESLint configuration for TypeScript + Angular templates
 - Unit tests for core todo logic
+- GitHub Actions CI workflow for lint, test, and build
 
 ## Tech Stack
 
@@ -99,3 +100,18 @@ npm run lint
 Configuration file:
 
 - `eslint.config.js`
+
+## CI/CD
+
+This project includes a GitHub Actions workflow:
+
+- `.github/workflows/ci.yml`
+
+It runs on push and pull request to `main` and `master`, and executes:
+
+1. `npm ci`
+2. `npm run lint`
+3. `npm run ng -- test --watch=false`
+4. `npm run build`
+
+Build output is uploaded as an artifact named `todo-app-dist`.
