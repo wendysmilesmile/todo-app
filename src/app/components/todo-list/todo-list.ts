@@ -13,7 +13,9 @@ import { TodoApiService } from '../../services/todo-api.service';
 export class TodoListComponent implements OnInit {
   protected readonly todos = signal<TodoItem[]>([]);
   protected readonly visibleTodos = computed(() =>
-    this.todos().filter((item) => !item.isDeleted)
+    this.todos()
+      .filter((item) => !item.isDeleted)
+      .sort((a, b) => b.id - a.id)
   );
   protected readonly loading = signal(false);
   protected readonly errorMessage = signal('');
